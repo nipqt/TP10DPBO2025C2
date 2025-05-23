@@ -3,7 +3,7 @@ class Database {
     private $host = "localhost";
     private $username = "root";
     private $password = "";
-    private $database = "library";
+    private $database = "tomorrowland";
     private $conn;
 
     public function getConnection() {

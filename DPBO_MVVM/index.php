@@ -1,74 +1,103 @@
 <?php
-require_once 'viewmodel/StaffViewModel.php';
-require_once 'viewmodel/DepartmentViewModel.php';
-require_once 'viewmodel/ShiftViewModel.php';
+require_once 'viewmodel/ScheduleViewModel.php';
+require_once 'viewmodel/ArtistViewModel.php';
+require_once 'viewmodel/StageViewModel.php';
+require_once 'viewmodel/EventShowViewModel.php';
 
-$entity = isset($_GET['entity']) ? $_GET['entity'] : 'staff';
+$entity = isset($_GET['entity']) ? $_GET['entity'] : 'schedule';
 $action = isset($_GET['action']) ? $_GET['action'] : 'list';
 
-if ($entity == 'staff') {
-    $viewModel = new StaffViewModel();
+if ($entity == 'schedule') {
+    $viewModel = new ScheduleViewModel();
+    $artistModel = new ArtistViewModel();
+    $stageModel = new StageViewModel();
+    $eventShowModel = new EventShowViewModel();
     if ($action == 'list') {
-        $staffList = $viewModel->getStaffList();
-        require_once 'views/staff_list.php';
+        $scheduleList = $viewModel->getScheduleList();
+        require_once 'views/schedule_list.php';
     } elseif ($action == 'add') {
-        $departments = $viewModel->getDepartments();
-        $shifts = $viewModel->getShifts();
-        require_once 'views/staff_form.php';
+        $artists = $artistModel->getArtistList();
+        $stages = $stageModel->getStageList();
+        $shows = $eventShowModel->getShowList();
+        require_once 'views/schedule_form.php';
     } elseif ($action == 'edit') {
-        $staff = $viewModel->getStaffById($_GET['id']);
-        $departments = $viewModel->getDepartments();
-        $shifts = $viewModel->getShifts();
-        require_once 'views/staff_form.php';
+        $schedule = $viewModel->getScheduleById($_GET['id']);
+        $artists = $artistModel->getArtistList();
+        $stages = $stageModel->getStageList();
+        $shows = $eventShowModel->getShowList();
+        require_once 'views/schedule_form.php';
     } elseif ($action == 'save') {
-        $viewModel->addStaff($_POST['name'], $_POST['department_id'], $_POST['shift_id']);
-        header('Location: index.php?entity=staff');
+        $viewModel->addSchedule($_POST['show_id'], $_POST['artist_id'], $_POST['stage_id'], $_POST['performance_time']);
+        header('Location: index.php?entity=schedule');
     } elseif ($action == 'update') {
-        $viewModel->updateStaff($_GET['id'], $_POST['name'], $_POST['department_id'], $_POST['shift_id']);
-        header('Location: index.php?entity=staff');
+        $viewModel->updateSchedule($_GET['id'], $_POST['show_id'], $_POST['artist_id'], $_POST['stage_id'], $_POST['performance_time']);
+        header('Location: index.php?entity=schedule');
     } elseif ($action == 'delete') {
-        $viewModel->deleteStaff($_GET['id']);
-        header('Location: index.php?entity=staff');
+        $viewModel->deleteSchedule($_GET['id']);
+        header('Location: index.php?entity=schedule');
     }
-} elseif ($entity == 'department') {
-    $viewModel = new DepartmentViewModel();
+
+} elseif ($entity == 'artist') {
+    $viewModel = new ArtistViewModel();
     if ($action == 'list') {
-        $departmentList = $viewModel->getDepartmentList();
-        require_once 'views/department_list.php';
+        $artistList = $viewModel->getArtistList();
+        require_once 'views/artist_list.php';
     } elseif ($action == 'add') {
-        require_once 'views/department_form.php';
+        require_once 'views/artist_form.php';
     } elseif ($action == 'edit') {
-        $department = $viewModel->getDepartmentById($_GET['id']);
-        require_once 'views/department_form.php';
+        $artist = $viewModel->getArtistById($_GET['id']);
+        require_once 'views/artist_form.php';
     } elseif ($action == 'save') {
-        $viewModel->addDepartment($_POST['name']);
-        header('Location: index.php?entity=department');
+        $viewModel->addArtist($_POST['name'], $_POST['bio']);
+        header('Location: index.php?entity=artist');
     } elseif ($action == 'update') {
-        $viewModel->updateDepartment($_GET['id'], $_POST['name']);
-        header('Location: index.php?entity=department');
+        $viewModel->updateArtist($_GET['id'], $_POST['name'], $_POST['bio']);
+        header('Location: index.php?entity=artist');
     } elseif ($action == 'delete') {
-        $viewModel->deleteDepartment($_GET['id']);
-        header('Location: index.php?entity=department');
+        $viewModel->deleteArtist($_GET['id']);
+        header('Location: index.php?entity=artist');
     }
-} elseif ($entity == 'shift') {
-    $viewModel = new ShiftViewModel();
+
+} elseif ($entity == 'stage') {
+    $viewModel = new StageViewModel();
     if ($action == 'list') {
-        $shiftList = $viewModel->getShiftList();
-        require_once 'views/shift_list.php';
+        $stageList = $viewModel->getStageList();
+        require_once 'views/stage_list.php';
     } elseif ($action == 'add') {
-        require_once 'views/shift_form.php';
+        require_once 'views/stage_form.php';
     } elseif ($action == 'edit') {
-        $shift = $viewModel->getShiftById($_GET['id']);
-        require_once 'views/shift_form.php';
+        $stage = $viewModel->getStageById($_GET['id']);
+        require_once 'views/stage_form.php';
     } elseif ($action == 'save') {
-        $viewModel->addShift($_POST['shift_name']);
-        header('Location: index.php?entity=shift');
+        $viewModel->addStage($_POST['name']);
+        header('Location: index.php?entity=stage');
     } elseif ($action == 'update') {
-        $viewModel->updateShift($_GET['id'], $_POST['shift_name']);
-        header('Location: index.php?entity=shift');
+        $viewModel->updateStage($_GET['id'], $_POST['name']);
+        header('Location: index.php?entity=stage');
     } elseif ($action == 'delete') {
-        $viewModel->deleteShift($_GET['id']);
-        header('Location: index.php?entity=shift');
+        $viewModel->deleteStage($_GET['id']);
+        header('Location: index.php?entity=stage');
+    }
+
+} elseif ($entity == 'show') {
+    $viewModel = new EventShowViewModel();
+    if ($action == 'list') {
+        $showList = $viewModel->getShowList();
+        require_once 'views/show_list.php';
+    } elseif ($action == 'add') {
+        require_once 'views/show_form.php';
+    } elseif ($action == 'edit') {
+        $show = $viewModel->getShowById($_GET['id']);
+        require_once 'views/show_form.php';
+    } elseif ($action == 'save') {
+        $viewModel->addShow($_POST['country'], $_POST['location'], $_POST['start_date'], $_POST['end_date']);
+        header('Location: index.php?entity=show');
+    } elseif ($action == 'update') {
+        $viewModel->updateShow($_GET['id'], $_POST['country'], $_POST['location'], $_POST['start_date'], $_POST['end_date']);
+        header('Location: index.php?entity=show');
+    } elseif ($action == 'delete') {
+        $viewModel->deleteShow($_GET['id']);
+        header('Location: index.php?entity=show');
     }
 }
 ?>
